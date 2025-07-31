@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Pack Manifest Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Minecraft Bedrock Pack Generator</h1>
+    
+    <label for="packName">Pack Name:</label>
+    <input type="text" id="packName" placeholder="Enter pack name" />
+
+    <label for="packDescription">Description:</label>
+    <input type="text" id="packDescription" placeholder="Short description" />
+
+    <label for="packType">Pack Type:</label>
+    <select id="packType">
+      <option value="bp">Behavior Pack</option>
+      <option value="rp">Resource Pack</option>
+      <option value="skin">Skin Pack</option>
+    </select>
+
+    <button onclick="generateManifest()">Generate Manifest</button>
+
+    <h2>Generated manifest.json:</h2>
+    <pre id="output"></pre>
+
+    <!-- 👇 New download button right here -->
+    <button onclick="downloadManifest()">Download manifest.json</button>
+  </div>
+
+  <script>
+    function generateUUID() {
+      return crypto.randomUUID();
+    }
+
+    function generateManifest() {
+      const name = document.getElementById("packName").value || "Unnamed Pack";
+      const desc = document.getElementById("packDescription").value || "No description provided.";
+      const type = document.getElementById("packType").value;
+
+      const baseManifest = {
+        format_version: 2,
+        header: {
+          name: name,
+          description: desc,
+          uuid: generateUUID(),
+          version: [1, 0, 0],
+          min_engine_version: [1, 16, 0]
+        },
+        modules: []
+      };
+
+      const moduleType = {
+        bp: "data",
+        rp: "resources",
+        skin: "skin_pack"
+      };
+
+      baseManifest.modules.push({
+        type: moduleType[type],
+        uuid: generateUUID(),
+        version: [1, 0, 0]
+      });
+
+      const output = JSON.stringify(baseManifest, null, 2);
+      document.getElementById("output").textContent = output;
+
+      // Store for download
+      window.generatedJSON = output;
+    }
+
+    function downloadManifest() {
+      const blob = new Blob([window.generatedJSON || "{}"], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "manifest.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
