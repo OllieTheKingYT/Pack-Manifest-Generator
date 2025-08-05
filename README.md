@@ -28,7 +28,7 @@ A lightweight tool built for Minecraft Bedrock creators, this generator streamli
 
 ## 🔗 Live Demo
 
-Try it out [here](https://your-demo-link.com)  
+Try it out [here](https://olliethekingyt.github.io/Pack-Manifest-Generator/)  
 *(Replace with your actual URL)*
 
 ---
